@@ -1,0 +1,1 @@
+sqlite3 customers.db < sql/create_database.sql
