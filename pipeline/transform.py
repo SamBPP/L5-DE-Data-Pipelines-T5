@@ -1,6 +1,5 @@
 """Data transformation logic."""
 import logging
-import pandas as pd
 from pipeline.data_utils import (
     tidy_columns, clean_column, clean_gender, clean_number, clean_salary,
     hash_password, infer_dob
@@ -10,6 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 def add_education_column(df, mapping):
+    """Add or update the education column based on the mapping provided."""
     try:
         if mapping is None:
             logger.warning("No mapping provided for education column.")
@@ -27,6 +27,7 @@ def add_education_column(df, mapping):
 def transform_users(df, country_code, column_mapping=None, gender_mapping=None,
                     education_mapping=None, payment_period=1,
                     int_dial_code='44', currency='GBP'):
+    """Transform data in the user DataFrame."""
     try:
         logger.info("Transforming user data...")
         df = tidy_columns(df, column_mapping)
@@ -36,7 +37,9 @@ def transform_users(df, country_code, column_mapping=None, gender_mapping=None,
             df['gender'] = df['gender'].apply(lambda row: clean_gender(row, gender_mapping))
 
         if 'dob' in df.columns and 'age_last_birthday' in df.columns:
-            df['dob'] = df.apply(lambda row: infer_dob(row['dob'], row['age_last_birthday']), axis=1)
+            df['dob'] = df.apply(lambda row: infer_dob(row['dob'],
+                                                       row['age_last_birthday']),
+                                 axis=1)
 
         if 'password' in df.columns:
             df['password'] = df['password'].apply(hash_password)

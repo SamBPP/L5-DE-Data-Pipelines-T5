@@ -1,9 +1,9 @@
-"""Data cleaning utilities."""
+"""Utility functions for data cleaning and transformation in the pipeline."""
 import re
 import hashlib
 import logging
-import pandas as pd
 from datetime import datetime
+import pandas as pd
 from pipeline.config_loader import load_json_config
 
 # Configure logging
@@ -13,12 +13,14 @@ logger = logging.getLogger(__name__)
 EXCLUSIONS = set(load_json_config('exclusions.json'))
 
 def tidy_columns(df, mapping=None):
+    """Clean and standardize DataFrame column names."""
     df.columns = [x.lower().strip().replace(' ', '_') for x in df.columns]
     if mapping:
         df = df.rename(columns=mapping)
     return df
 
 def clean_column(value):
+    """Clean a single column in the user DataFrame."""
     if isinstance(value, str) and value.strip().upper() in EXCLUSIONS:
         return None
     if isinstance(value, float) and pd.isna(value):
@@ -26,6 +28,7 @@ def clean_column(value):
     return value
 
 def clean_gender(value, mapping=None):
+    """Clean the gender column in the user DataFrame."""
     if pd.isna(value):
         return None
     if mapping is None:
@@ -40,15 +43,16 @@ def clean_gender(value, mapping=None):
         return None
 
 def clean_number(value):
+    """Clean a phone number column in the user DataFrame."""
     if pd.isna(value):
         return None
-    else:
-        number = re.sub(r"[^\d]", '', value)
-        if number.startswith('0'):
-            number = number[1:]
-        return number
+    number = re.sub(r"[^\d]", '', value)
+    if number.startswith('0'):
+        number = number[1:]
+    return number
 
 def clean_salary(value, period=1):
+    """Clean a salary column in the user DataFrame."""
     if pd.isna(value):
         return None
     try:
@@ -61,11 +65,13 @@ def clean_salary(value, period=1):
         return None
 
 def hash_password(pw, encoding='utf-8'):
+    """Hash a password using SHA-256."""
     if pd.isna(pw):
         return None
     return hashlib.sha256(pw.encode(encoding)).hexdigest()
 
 def clean_dob(value, lim_year=25):
+    """Clean a date of birth column in the user DataFrame."""
     if pd.isna(value):
         return None
     try:
@@ -77,6 +83,7 @@ def clean_dob(value, lim_year=25):
         return None
 
 def infer_dob(date, age):
+    """Infer date of birth from a date string and age."""
     formats = ["%d/%m/%y", "%y-%m-%d", "%m/%d/%y"]
     for fmt in formats:
         try:

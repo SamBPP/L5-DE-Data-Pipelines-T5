@@ -1,13 +1,14 @@
 """SQLite database logic for inserting users and logins."""
 import logging
-import pandas as pd
 import sqlite3
+import pandas as pd
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
 def update_users_table(users_df: pd.DataFrame, conn: sqlite3.Connection):
+    """Update the users table with new user data."""
     try:
         new_count = users_df.to_sql('users', conn, if_exists='append', index=False)
         logger.info("Inserted %d new records into users table", new_count)
@@ -19,6 +20,7 @@ def update_users_table(users_df: pd.DataFrame, conn: sqlite3.Connection):
 
 
 def update_login_table(logins_df: pd.DataFrame, conn: sqlite3.Connection):
+    """Update the logins table with new login data."""
     try:
         sql_str = """
         SELECT DISTINCT

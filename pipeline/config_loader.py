@@ -1,5 +1,5 @@
 # pipeline/config_loader.py
-
+"""Module for loading JSON configuration files from a project-level 'config' directory."""
 import json
 import os
 
