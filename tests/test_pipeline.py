@@ -1,5 +1,14 @@
 import datetime
+import pytest
+from pipeline.config_loader import load_json_config
 from pipeline.data_utils import clean_salary, hash_password, clean_gender, infer_dob
+
+def test_config_loader():
+    config = load_json_config('config_test.json')
+    assert config.get('label') == 'TEST'
+    assert config.get('non_existent_key') is None
+    with pytest.raises(FileNotFoundError):
+        load_json_config('non_existent.json')
 
 
 def test_clean_salary():
