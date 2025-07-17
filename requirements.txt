@@ -3,3 +3,5 @@ nbconvert
 lxml
 pytz
 pytest
+pytest-cov
+pylint

@@ -20,5 +20,20 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run tests
-        run: pytest
+      - name: Lint with pylint
+        run: |
+          pylint pipeline/ tests/ main.py
+
+      - name: Run tests with coverage
+        run: pytest --cov=pipeline --cov-report=term-missing
+
+      - name: Upload coverage report
+        run: |
+          mkdir -p coverage
+          pytest --cov=pipeline --cov-report=html:coverage/html
+        
+      - name: Upload coverage report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/html
