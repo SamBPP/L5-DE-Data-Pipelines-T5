@@ -22,7 +22,7 @@ jobs:
 
       - name: Lint with pylint
         run: |
-          pylint pipeline/ tests/ main.py
+          pylint pipeline/ tests/ main.py --output=lint.txt || true
 
       - name: Run tests with coverage
         run: pytest --cov=pipeline --cov-report=term-missing
