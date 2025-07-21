@@ -7,11 +7,19 @@ from pipeline.data_utils import tidy_columns
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
+def drop_missing_row(df, thresh=0.5):
+    """ Drop rows with more than `thresh` percent missing values."""
+    pct_missing = df.isna().sum(axis=1) / df.shape[1]
+    df_missing = df[pct_missing > thresh]
+    logger.info(f"Rows with more than {round(thresh*100)}% missing values: {df_missing.shape[0]}")
+    return df[pct_missing <= thresh]
+
 def load_user_data(filepath, encoding='utf-8'):
     """Load user data from a CSV file."""
     logger.info("Loading user data from %s", filepath)
     df = pd.read_csv(filepath, encoding=encoding)
-    return df
+    df_filt = drop_missing_row(df)
+    return df_filt
 
 def load_login_data(filepath, timezone):
     """Load login data from a CSV file and convert timestamps to UTC."""

@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS users (
     surname TEXT NOT NULL,
     middle_initials TEXT,
     middle_name TEXT,
+    known_as TEXT,
     dob DATE,
     age_last_birthday INTEGER,
     favourite_colour TEXT,
@@ -26,9 +27,9 @@ CREATE TABLE IF NOT EXISTS users (
     education TEXT,
     rqf TEXT,
     salary REAL,
-    currency TEXT CHECK(currency IN ('GBP', 'EUR', 'USD')) NOT NULL,
+    currency TEXT CHECK(currency IN ('GBP', 'EUR', 'USD', 'CAD')) NOT NULL,
     website_visits_last_30_days INTEGER,
-    country_code TEXT CHECK(country_code IN ('UK', 'FR', 'USA', 'SC')) NOT NULL
+    country_code TEXT CHECK(country_code IN ('UK', 'FR', 'USA', 'SC', 'CAN')) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS logins (

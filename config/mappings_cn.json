@@ -1,0 +1,51 @@
+{
+    "label": "CAN",
+    "timezone": "America/Toronto",
+    "user_path": "data/CN User Data.csv",
+    "login_path": "data/CN-userTS.csv",
+    "payment_period": 1,
+    "int_dial_code": "1",
+    "currency": "CAD",
+
+    "column_mapping": {
+        "given_name/_prénom": "first_name",
+        "surname/nom_de_famille": "surname",
+        "known_as/_connu_sous_le_nom": "known_as",
+        "dob/ddn":"dob",
+        "age_last_birthday/_âge_dernier_anniversaire": "age_last_birthday",
+        "favourite_colour/_couleur_préférée": "favourite_colour",
+        "favourite_animal/_animal_préféré":"favourite_animal",
+        "favourite_food/_plat_préféré":"favourite_food",
+        "gender/_genre": "gender",
+        "password/_mot_de_passe": "password",
+        "city/_ville": "city",
+        "provinces-territories/_provinces-territoires": "county",
+        "postal_code/_code_postal": "postcode",
+        "email/_adresse_électronique": "email",
+        "phone/_téléphone": "phone",
+        "mobile/_portable":"mobile" ,
+        "education_level/_niveau_d'éducation": "education",
+        "salary/_salaire":"salary",
+        "website_visits_last_30_days/_visites_du_site_web_au_cours_des_30_derniers_jours": "website_visits_last_30_days"
+    },
+
+    "gender_mapping": {
+        "Male/Mâle": "Male",
+        "Female/Femelle": "Female",
+        "NB": "Non-Binary",
+        "LBTQI": "LGBTQ+",
+        "2SLGBTQI+": "LGBTQ+",
+        "LGBTQ2": "LGBTQ+",
+        "Prefer not to say/Je préfère ne pas dire": "Prefer not to say",
+        "Two-Spirit/Bispirituel": "Two Spirit"
+
+    },
+
+    "education_mapping": {
+        "High School Diploma": "3",
+        "College Diploma": "4",
+        "Bachelor": "6",
+        "Masters": "7",
+        "Doctoral": "8"
+    }
+}

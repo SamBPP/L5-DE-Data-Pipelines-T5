@@ -15,6 +15,8 @@ from pipeline.load_data import load_user_data, load_login_data
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
+EXCLUSIONS = set(load_json_config('exclusions.json'))
+
 
 def process_country(config):
     """Process user and login data for a specific country based on the provided configuration."""
@@ -29,7 +31,8 @@ def process_country(config):
                                 education_mapping=config.get('education_mapping'),
                                 payment_period=config.get('payment_period', 1),
                                 int_dial_code=config.get('int_dial_code', '44'),
-                                currency=config.get('currency', 'GBP'))
+                                currency=config.get('currency', 'GBP'),
+                                exclusions=EXCLUSIONS)
 
         validation.validate_user_visits(users, logins)
         validation.check_duplicates(users, subset=['email'], label=f"{config.get('label')} users")
@@ -63,17 +66,19 @@ def run_pipeline():
         fr_config = load_json_config('mappings_fr.json')
         usa_config = load_json_config('mappings_usa.json')
         sc_config = load_json_config('mappings_sc.json')
+        cn_config = load_json_config('mappings_cn.json')
 
         users_uk, logins_uk = process_country(uk_config)
         users_fr, logins_fr = process_country(fr_config)
         users_usa, logins_usa = process_country(usa_config)
         users_sc, logins_sc = process_country(sc_config)
+        users_cn, logins_cn = process_country(cn_config)
 
         subprocess.run("sql/create_database.sh", shell=True, check=True)
 
         insert_all_to_db("customers.db",
-                         user_sets=[users_uk, users_fr, users_usa, users_sc],
-                         login_sets=[logins_uk, logins_fr, logins_usa, logins_sc])
+                         user_sets=[users_uk, users_fr, users_usa, users_sc, users_cn],
+                         login_sets=[logins_uk, logins_fr, logins_usa, logins_sc, logins_cn])
 
     except subprocess.CalledProcessError as e:
         logger.error(f"Subprocess failed: {e}")

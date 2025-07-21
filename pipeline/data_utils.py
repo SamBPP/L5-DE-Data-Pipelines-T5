@@ -10,8 +10,6 @@ from pipeline.config_loader import load_json_config
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
-EXCLUSIONS = set(load_json_config('exclusions.json'))
-
 def tidy_columns(df, mapping=None):
     """Clean and standardize DataFrame column names."""
     df.columns = [x.lower().strip().replace(' ', '_') for x in df.columns]
@@ -19,9 +17,9 @@ def tidy_columns(df, mapping=None):
         df = df.rename(columns=mapping)
     return df
 
-def clean_column(value):
+def clean_column(value, exclusions=None):
     """Clean a single column in the user DataFrame."""
-    if isinstance(value, str) and value.strip().upper() in EXCLUSIONS:
+    if isinstance(value, str) and value.strip().upper() in exclusions:
         return None
     if isinstance(value, float) and pd.isna(value):
         return None
@@ -56,6 +54,11 @@ def clean_salary(value, period=1):
     if pd.isna(value):
         return None
     try:
+        if isinstance(value, str):
+            if value.endswith('pa'):
+                period = 1
+            elif value.endswith('pcm'):
+                period = 12
         salary = round(int(re.sub(r"[^\d]", '', str(value))) / 100, 2) * period
         if salary < 0:
             logger.warning("Negative salary found: %s", value)

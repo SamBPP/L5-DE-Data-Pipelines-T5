@@ -25,12 +25,16 @@ def add_education_column(df, mapping):
 
 
 def transform_users(df, country_code, column_mapping=None, gender_mapping=None,
-                    education_mapping=None, payment_period=1,
-                    int_dial_code='44', currency='GBP'):
+                    education_mapping=None, exclusions=None,
+                    payment_period=1, int_dial_code='44', currency='GBP'):
     """Transform data in the user DataFrame."""
     try:
         logger.info("Transforming user data...")
         df = tidy_columns(df, column_mapping)
+
+        for col in df.columns:
+            if col not in ['password', 'dob']:
+                df[col] = df[col].apply(lambda row: clean_column(row, exclusions))
 
         if 'gender' in df.columns:
             df['gender'] = df['gender'].astype(str)
@@ -43,10 +47,6 @@ def transform_users(df, country_code, column_mapping=None, gender_mapping=None,
 
         if 'password' in df.columns:
             df['password'] = df['password'].apply(hash_password)
-
-        for col in df.columns:
-            if col not in ['password', 'dob']:
-                df[col] = df[col].apply(clean_column)
 
         for col in ['phone', 'mobile']:
             if col in df.columns:
